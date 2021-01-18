@@ -59,7 +59,6 @@ class BlogController extends Controller
 
     public function articles(Request $request)
     {
-        /** @var LengthAwarePaginator $paginator */
         return Article::query()
             ->withCount($this->articleWithLike($request->ip()))
             ->orderByDesc('created_at')
