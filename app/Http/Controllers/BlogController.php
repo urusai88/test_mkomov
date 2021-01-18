@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 class BlogController extends Controller
 {
@@ -37,6 +39,15 @@ class BlogController extends Controller
 
     public function articles()
     {
-        return Article::query()->paginate(10);
+        /** @var LengthAwarePaginator $paginator */
+        $paginator = Article::query()->paginate(10);
+        $paginator->getCollection()->transform(function (Article $item) {
+            $array = $item->toArray();
+            $array['slug'] = "{$item->slug}.{$item->id}";
+
+            return $array;
+        });
+
+        return $paginator;
     }
 }

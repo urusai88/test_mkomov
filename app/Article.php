@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $slug
+ */
 class Article extends Model
 {
     protected $table = 'articles';
