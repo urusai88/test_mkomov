@@ -23,4 +23,8 @@ Route::group(['prefix' => 'blog'], function () {
     Route::get('/articles_last', [BlogController::class, 'articlesLast']);
     Route::get('/articles', [BlogController::class, 'articles']);
     Route::get('/article/{id}', [BlogController::class, 'getArticle']);
+    Route::post('/comment/create', [BlogController::class, 'createComment']);
+    Route::post('/articles/like', [BlogController::class, 'articleLike']);
+    Route::post('/articles/unlike', [BlogController::class, 'articleUnlike']);
+    Route::post('/articles/view', [BlogController::class, 'articleView']);
 });

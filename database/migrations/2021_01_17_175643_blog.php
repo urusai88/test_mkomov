@@ -53,6 +53,16 @@ class Blog extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
         });
+
+        Schema::create('articles_likes', function (Blueprint $blueprint) {
+            $blueprint->bigInteger('article_id');
+            $blueprint->ipAddress('ip_address');
+
+            $blueprint->primary(['article_id', 'ip_address']);
+            $blueprint->foreign('article_id')->references('id')->on('articles')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+        });
     }
 
     /**
@@ -62,6 +72,7 @@ class Blog extends Migration
      */
     public function down()
     {
+        Schema::drop('articles_likes');
         Schema::drop('comments');
         Schema::drop('articles_2_articles_tags');
         Schema::drop('articles_tags');
