@@ -47,6 +47,7 @@ class Blog extends Migration
             $blueprint->text('subject');
             $blueprint->text('body');
             $blueprint->integer('article_id');
+            $blueprint->timestamps();
 
             $blueprint->foreign('article_id')
                 ->references('id')->on('articles')

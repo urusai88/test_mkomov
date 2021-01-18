@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use \Throwable;
-use App\ArticlesLike;
-use App\Article;
-use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use App\Article;
+use App\ArticleLike;
 
 class BlogController extends Controller
 {
@@ -22,12 +20,7 @@ class BlogController extends Controller
         ];
     }
 
-    /**
-     * @param Request $request
-     * @return Comment
-     * @throws Throwable
-     */
-    public function createComment(Request $request)
+    public function commentCreate(Request $request)
     {
         $data = $request->validate([
             'article_id' => 'required|exists:articles,id',
@@ -35,13 +28,23 @@ class BlogController extends Controller
             'body' => 'required|string|min:1',
         ]);
 
-        /** @var Comment $comment */
-        $comment = Comment::unguarded(function () use ($data) {
-            return new Comment($data);
+        /** @var ArticleLike $comment */
+        $comment = ArticleLike::unguarded(function () use ($data) {
+            return new ArticleLike($data);
         });
         $comment->saveOrFail();
 
         return $comment;
+    }
+
+    public function commentList($id)
+    {
+        /** @var Article $article */
+        $article = Article::query()->findOrFail($id);
+
+        return $article->comments()
+            ->orderByDesc('created_at')
+            ->paginate(10);
     }
 
     public function articlesLast(Request $request)
@@ -51,23 +54,14 @@ class BlogController extends Controller
             ->orderByDesc('created_at')
             ->limit(6)
             ->get();
-
     }
 
     public function articles()
     {
         /** @var LengthAwarePaginator $paginator */
-        $paginator = Article::query()
+        return Article::query()
             ->orderByDesc('created_at')
             ->paginate(10);
-        $paginator->getCollection()->transform(function (Article $item) {
-            $array = $item->toArray();
-            $array['slug'] = "{$item->slug}.{$item->id}";
-
-            return $array;
-        });
-
-        return $paginator;
     }
 
     public function getArticle($id)
@@ -90,15 +84,15 @@ class BlogController extends Controller
         /** @var Article $article */
         $article = Article::query()->findOrFail($id);
 
-        ArticlesLike::unguard();
+        ArticleLike::unguard();
         $attributes = [
             'article_id' => $id,
             'ip_address' => $request->ip(),
         ];
-        $like = ArticlesLike::query()
+        $like = ArticleLike::query()
             ->where($attributes)
             ->firstOrNew($attributes);
-        ArticlesLike::reguard();
+        ArticleLike::reguard();
 
         if (!$like->exists) {
             $like->saveOrFail();
@@ -119,7 +113,7 @@ class BlogController extends Controller
         /** @var Article $article */
         $article = Article::query()->findOrFail($id);
 
-        $deleted = ArticlesLike::query()
+        $deleted = ArticleLike::query()
             ->where([
                 'article_id' => $id,
                 'ip_address' => $request->ip(),
@@ -144,7 +138,7 @@ class BlogController extends Controller
         ]);
 
         $articleQuery = Article::query()->whereKey($data['article_id']);
-        $like = ArticlesLike::query()
+        $like = ArticleLike::query()
             ->where('article_id', $data['article_id'])
             ->where('ip_address', $request->ip())
             ->firstOrNew();

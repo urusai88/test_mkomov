@@ -21,11 +21,16 @@ class Article extends Model
 
     public function likes()
     {
-        return $this->hasMany(ArticlesLike::class, 'article_id');
+        return $this->hasMany(ArticleLike::class, 'article_id');
     }
 
     public function like()
     {
-        return $this->hasOne(ArticlesLike::class, 'article_id');
+        return $this->hasOne(ArticleLike::class, 'article_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'article_id');
     }
 }
