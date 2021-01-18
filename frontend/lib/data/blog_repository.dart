@@ -57,7 +57,7 @@ class BlogRepository {
     return ArticlesLikeResponse.fromJson(jsonDecode(resp.body));
   }
 
-  Future<void> viewArticle({required int articleId}) async {
+  Future<ArticlesViewResponse> viewArticle({required int articleId}) async {
     final resp = await http.post(
       '$baseUrl/blog/articles/view',
       body: jsonEncode({'article_id': articleId}),
@@ -66,6 +66,9 @@ class BlogRepository {
         'content-type': 'application/json',
       },
     );
+
+    return ArticlesViewResponse.fromJson(
+        jsonDecode(resp.body) as Map<String, dynamic>);
   }
 
   Future<CommentListResponse> commentList({

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -26,9 +27,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
   TextEditingController commentSubjectController = TextEditingController();
   TextEditingController commentBodyController = TextEditingController();
 
+  late Timer viewTimer;
+
   @override
   void initState() {
     super.initState();
+
+    viewTimer = new Timer(Duration(seconds: 5), () async {
+      await model.view();
+    });
 
     scrollController = ScrollController();
     scrollController.addListener(scrollControllerListener);
@@ -41,10 +48,16 @@ class _ArticleScreenState extends State<ArticleScreen> {
     Future(_asyncInitState);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+
+    viewTimer.cancel();
+  }
+
   Future<void> _asyncInitState() async {
     try {
       await model.load();
-      await model.view();
     } catch (e) {
       await showDialog(
         context: context,

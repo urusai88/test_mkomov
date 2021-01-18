@@ -54,6 +54,18 @@ Map<String, dynamic> _$ArticlesLikeResponseToJson(
       'status': instance.status,
     };
 
+ArticlesViewResponse _$ArticlesViewResponseFromJson(Map<String, dynamic> json) {
+  return ArticlesViewResponse(
+    viewsCount: json['views_count'] as int,
+  );
+}
+
+Map<String, dynamic> _$ArticlesViewResponseToJson(
+        ArticlesViewResponse instance) =>
+    <String, dynamic>{
+      'views_count': instance.viewsCount,
+    };
+
 CommentListResponse _$CommentListResponseFromJson(Map<String, dynamic> json) {
   return CommentListResponse(
     currentPage: json['current_page'] as int,

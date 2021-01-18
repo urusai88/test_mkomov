@@ -60,6 +60,19 @@ class ArticlesLikeResponse {
   Map<String, dynamic> toJson() => _$ArticlesLikeResponseToJson(this);
 }
 
+@JsonSerializable()
+class ArticlesViewResponse {
+  @JsonKey(name: 'views_count')
+  final int viewsCount;
+
+  ArticlesViewResponse({required this.viewsCount});
+
+  factory ArticlesViewResponse.fromJson(Map<String, dynamic> json) =>
+      _$ArticlesViewResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ArticlesViewResponseToJson(this);
+}
+
 @JsonSerializable(explicitToJson: true)
 class CommentListResponse {
   List<CommentEntity> data;

@@ -80,6 +80,12 @@ class BlogController extends Controller
         ]);
 
         Article::query()->where('id', $data['article_id'])->increment('views_count');
+        /** @var Article $article */
+        $article = Article::query()->find($data['article_id']);
+
+        return [
+            'views_count' => $article->views_count,
+        ];
     }
 
     public function articleLike(Request $request)

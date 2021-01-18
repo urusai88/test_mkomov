@@ -62,6 +62,18 @@ class ArticleEntity {
     required this.like,
   });
 
+  ArticleEntity copyWithViewsCount(int viewsCount) => ArticleEntity(
+        id: id,
+        title: title,
+        body: body,
+        slug: slug,
+        likesCount: likesCount,
+        viewsCount: viewsCount,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        like: like,
+      );
+
   factory ArticleEntity.fromJson(Map<String, dynamic> json) =>
       _$ArticleEntityFromJson(json);
 
