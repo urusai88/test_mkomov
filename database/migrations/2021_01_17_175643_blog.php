@@ -21,6 +21,25 @@ class Blog extends Migration
             $blueprint->timestamps();
         });
 
+        Schema::create('articles_tags', function (Blueprint $blueprint) {
+            $blueprint->id();
+            $blueprint->string('url')->unique();
+            $blueprint->string('label')->unique();
+        });
+
+        Schema::create('articles_2_articles_tags', function (Blueprint $blueprint) {
+            $blueprint->bigInteger('articles_id');
+            $blueprint->bigInteger('articles_tags_id');
+
+            $blueprint->primary(['articles_id', 'articles_tags_id']);
+            $blueprint->foreign('articles_id')->references('id')->on('articles')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $blueprint->foreign('articles_tags_id')->references('id')->on('articles_tags')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+        });
+
         Schema::create('comments', function (Blueprint $blueprint) {
             $blueprint->id();
             $blueprint->text('subject');
@@ -42,6 +61,8 @@ class Blog extends Migration
     public function down()
     {
         Schema::drop('comments');
+        Schema::drop('articles_2_articles_tags');
+        Schema::drop('articles_tags');
         Schema::drop('articles');
     }
 }
