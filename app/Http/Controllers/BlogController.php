@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use \Throwable;
 use App\Article;
 use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Arr;
 
 class BlogController extends Controller
 {
     /**
      * @param Request $request
      * @return Comment
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function createComment(Request $request)
     {
@@ -53,6 +53,6 @@ class BlogController extends Controller
 
     public function getArticle($id)
     {
-        return Article::query()->findOrFail($id);
+        return Article::query()->with('articleTags')->findOrFail($id);
     }
 }
