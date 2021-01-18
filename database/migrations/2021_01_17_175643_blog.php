@@ -18,6 +18,7 @@ class Blog extends Migration
             $blueprint->text('body');
             $blueprint->integer('likes_count')->default(0);
             $blueprint->integer('views_count')->default(0);
+            $blueprint->timestamps();
         });
 
         Schema::create('comments', function (Blueprint $blueprint) {
