@@ -34,4 +34,9 @@ class BlogController extends Controller
     {
         return Article::query()->limit(6)->get();
     }
+
+    public function articles()
+    {
+        return Article::query()->paginate(10);
+    }
 }
