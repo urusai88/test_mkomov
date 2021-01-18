@@ -14,14 +14,14 @@ class Blog extends Migration
     public function up()
     {
         Schema::create('articles', function (Blueprint $blueprint) {
-            $blueprint->increments('id')->primary();
+            $blueprint->id();
             $blueprint->text('body');
             $blueprint->integer('likes_count')->default(0);
             $blueprint->integer('views_count')->default(0);
         });
 
         Schema::create('comments', function (Blueprint $blueprint) {
-            $blueprint->increments('id')->primary();
+            $blueprint->id();
             $blueprint->text('subject');
             $blueprint->text('body');
             $blueprint->integer('article_id');
