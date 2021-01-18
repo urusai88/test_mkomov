@@ -22,4 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'blog'], function () {
     Route::get('/articles_last', [BlogController::class, 'articlesLast']);
     Route::get('/articles', [BlogController::class, 'articles']);
+    Route::get('/article/{id}', [BlogController::class, 'getArticle']);
 });

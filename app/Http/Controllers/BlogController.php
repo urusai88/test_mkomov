@@ -50,4 +50,9 @@ class BlogController extends Controller
 
         return $paginator;
     }
+
+    public function getArticle($id)
+    {
+        return Article::query()->findOrFail($id);
+    }
 }
