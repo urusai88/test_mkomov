@@ -112,7 +112,6 @@ class BlogController extends Controller
         $id = $request->input('article_id');
         /** @var Article $article */
         $article = Article::query()->findOrFail($id);
-
         $deleted = ArticleLike::query()
             ->where([
                 'article_id' => $id,
@@ -128,36 +127,6 @@ class BlogController extends Controller
             'id' => $article->id,
             'likes_count' => $article->likes_count,
             'status' => false,
-        ];
-    }
-
-    public function likeToggle(Request $request)
-    {
-        $data = $request->validate([
-            'article_id' => 'required|exists:articles,id',
-        ]);
-
-        $articleQuery = Article::query()->whereKey($data['article_id']);
-        $like = ArticleLike::query()
-            ->where('article_id', $data['article_id'])
-            ->where('ip_address', $request->ip())
-            ->firstOrNew();
-
-        if ($like->exists) {
-            $like->delete();
-            $articleQuery->decrement('likes_count');
-        } else {
-            $like->saveOrFail();
-            $articleQuery->increment('likes_count');
-        }
-
-        /** @var Article $article */
-        $article = $articleQuery->first();
-
-        return [
-            'id' => $article->id,
-            'likes_count' => $article->likes_count,
-            'status' => (int)$like->exists,
         ];
     }
 }
