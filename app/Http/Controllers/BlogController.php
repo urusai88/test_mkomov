@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use \Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -29,8 +30,8 @@ class BlogController extends Controller
         ]);
 
         /** @var ArticleLike $comment */
-        $comment = ArticleLike::unguarded(function () use ($data) {
-            return new ArticleLike($data);
+        $comment = Comment::unguarded(function () use ($data) {
+            return new Comment($data);
         });
         $comment->saveOrFail();
 
@@ -56,17 +57,21 @@ class BlogController extends Controller
             ->get();
     }
 
-    public function articles()
+    public function articles(Request $request)
     {
         /** @var LengthAwarePaginator $paginator */
         return Article::query()
+            ->withCount($this->articleWithLike($request->ip()))
             ->orderByDesc('created_at')
             ->paginate(10);
     }
 
-    public function getArticle($id)
+    public function getArticle($id, Request $request)
     {
-        return Article::query()->with('articleTags')->findOrFail($id);
+        return Article::query()
+            ->with('articleTags')
+            ->withCount($this->articleWithLike($request->ip()))
+            ->findOrFail($id);
     }
 
     public function articleView(Request $request)
