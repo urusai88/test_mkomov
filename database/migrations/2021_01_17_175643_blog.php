@@ -15,7 +15,9 @@ class Blog extends Migration
     {
         Schema::create('articles', function (Blueprint $blueprint) {
             $blueprint->id();
+            $blueprint->text('title');
             $blueprint->text('body');
+            $blueprint->text('slug');
             $blueprint->integer('likes_count')->default(0);
             $blueprint->integer('views_count')->default(0);
             $blueprint->timestamps();
