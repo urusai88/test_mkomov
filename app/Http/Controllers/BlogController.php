@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
-use \Throwable;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use App\Article;
 use App\ArticleLike;
