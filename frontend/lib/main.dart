@@ -4,8 +4,11 @@ import 'package:frontend/ui/main_screen.dart';
 import 'package:frontend/ui/screens/article_catalog_screen.dart';
 import 'package:frontend/ui/screens/article_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
+  setPathUrlStrategy();
+
   runApp(MyApp());
 }
 
