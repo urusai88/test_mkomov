@@ -146,7 +146,7 @@ class BlogController extends Controller
 
         return [
             'id' => $id,
-            'likes_count' => Article::query()->whereKey($id) > pluck('likes_count')->first(),
+            'likes_count' => Article::query()->whereKey($id)->pluck('likes_count')->first(),
             'status' => false,
         ];
     }
