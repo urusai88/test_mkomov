@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,17 +14,14 @@ use App\Http\Controllers\BlogController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['prefix' => 'blog'], function () {
+    Route::get('/articles/{id}', [BlogController::class, 'article']);
     Route::get('/articles_last', [BlogController::class, 'articlesLast']);
     Route::get('/articles', [BlogController::class, 'articles']);
-    Route::get('/article/{id}', [BlogController::class, 'getArticle']);
     Route::post('/articles/like', [BlogController::class, 'articleLike']);
     Route::post('/articles/unlike', [BlogController::class, 'articleUnlike']);
     Route::post('/articles/view', [BlogController::class, 'articleView']);
-    Route::post('/comment/create', [BlogController::class, 'commentCreate']);
-    Route::get('/comment/list/{id}', [BlogController::class, 'commentList']);
+
+    Route::post('/comments/create', [BlogController::class, 'commentCreate']);
+    Route::get('/comments/list/{id}', [BlogController::class, 'commentsList']);
 });

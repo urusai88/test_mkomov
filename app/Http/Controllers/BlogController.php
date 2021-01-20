@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
-use App\Comment;
 use App\Article;
 use App\ArticleLike;
+use App\Comment;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
@@ -36,7 +36,7 @@ class BlogController extends Controller
         return $comment;
     }
 
-    public function commentList($id)
+    public function commentsList($id)
     {
         /** @var Article $article */
         $article = Article::query()->findOrFail($id);
@@ -63,7 +63,7 @@ class BlogController extends Controller
             ->paginate(10);
     }
 
-    public function getArticle($id, Request $request)
+    public function article($id, Request $request)
     {
         return Article::query()
             ->with('articleTags')
