@@ -56,6 +56,7 @@ class BlogController extends Controller
     {
         return Article::query()
             ->withCount($this->articleWithLike($request->ip()))
+            ->with('articleTags')
             ->orderByDesc('created_at')
             ->limit(6)
             ->get();
@@ -119,7 +120,7 @@ class BlogController extends Controller
 
         return [
             'id' => $id,
-            'likes_count' => Article::query()->whereKey($id)->qualifyColumn('likes_count'),
+            'likes_count' => Article::query()->whereKey($id)->pluck('likes_count')->first(),
             'status' => true,
         ];
     }
@@ -145,7 +146,7 @@ class BlogController extends Controller
 
         return [
             'id' => $id,
-            'likes_count' => Article::query()->whereKey($id)->qualifyColumn('likes_count'),
+            'likes_count' => Article::query()->whereKey($id) > pluck('likes_count')->first(),
             'status' => false,
         ];
     }
