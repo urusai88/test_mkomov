@@ -19,10 +19,17 @@ class BlogController extends Controller
         ];
     }
 
+    protected function articleIdValidator()
+    {
+        return [
+            'article_id' => 'required|exists:articles,id',
+        ];
+    }
+
     public function commentCreate(Request $request)
     {
         $data = $request->validate([
-            'article_id' => 'required|exists:articles,id',
+            ...$this->articleIdValidator(),
             'subject' => 'required|string|min:1',
             'body' => 'required|string|min:1',
         ]);
@@ -59,6 +66,7 @@ class BlogController extends Controller
     {
         return Article::query()
             ->withCount($this->articleWithLike($request->ip()))
+            ->with('articleTags')
             ->orderByDesc('created_at')
             ->paginate(10);
     }
@@ -66,74 +74,85 @@ class BlogController extends Controller
     public function article($id, Request $request)
     {
         return Article::query()
-            ->with('articleTags')
             ->withCount($this->articleWithLike($request->ip()))
+            ->with('articleTags')
             ->findOrFail($id);
     }
 
     public function articleView(Request $request)
     {
         $data = $request->validate([
-            'article_id' => 'required|exists:articles,id',
+            ... $this->articleIdValidator(),
         ]);
+        $id = $data['article_id'];
 
-        Article::query()->where('id', $data['article_id'])->increment('views_count');
+        Article::query()->whereKey($id)->increment('views_count');
         /** @var Article $article */
-        $article = Article::query()->find($data['article_id']);
+        $article = Article::query()->find($id);
 
         return [
             'views_count' => $article->views_count,
         ];
     }
 
+    protected function likeExists($id, $ip)
+    {
+        return ArticleLike::query()
+            ->where('article_id', $id)
+            ->where('ip_address', $ip)
+            ->exists();
+    }
+
     public function articleLike(Request $request)
     {
-        $id = $request->input('article_id');
-        /** @var Article $article */
-        $article = Article::query()->findOrFail($id);
+        $data = $request->validate([
+            ... $this->articleIdValidator(),
+        ]);
+        $id = $data['article_id'];
+        $ip = $request->ip();
 
-        ArticleLike::unguard();
-        $attributes = [
-            'article_id' => $id,
-            'ip_address' => $request->ip(),
-        ];
-        $like = ArticleLike::query()
-            ->where($attributes)
-            ->firstOrNew($attributes);
-        ArticleLike::reguard();
+        $exists = $this->likeExists($id, $request->ip());
 
-        if (!$like->exists) {
-            $like->saveOrFail();
-            $article->newQuery()->whereKey($article->id)->increment('likes_count');
-            $article->refresh();
+        if (!$exists) {
+            $articleLike = new ArticleLike();
+            $articleLike->article_id = $id;
+            $articleLike->ip_address = $request->ip();
+            $articleLike->save();
+
+            Article::query()->whereKey($id)->increment('likes_count');
         }
 
         return [
-            'id' => $article->id,
-            'likes_count' => $article->likes_count,
+            'id' => $id,
+            'likes_count' => Article::query()->whereKey($id)->qualifyColumn('likes_count'),
             'status' => true,
         ];
     }
 
     public function articleUnlike(Request $request)
     {
-        $id = $request->input('article_id');
-        /** @var Article $article */
-        $article = Article::query()->findOrFail($id);
-        $deleted = ArticleLike::query()
-            ->where([
-                'article_id' => $id,
-                'ip_address' => $request->ip(),
-            ])->delete();
+        $data = $request->validate([
+            ... $this->articleIdValidator(),
+        ]);
+        $id = $data['article_id'];
+        $ip = $request->ip();
 
-        if ($deleted) {
-            $article->newQuery()->whereKey($article->id)->decrement('likes_count');
-            $article->refresh();
+        $exists = $this->likeExists($id, $request->ip());
+
+        if ($exists) {
+            $deleted = ArticleLike::query()
+                ->where('article_id', $id)
+                ->where('ip_address', $ip)
+                ->delete();
+
+            if ($deleted) {
+                Article::query()->whereKey($id)->decrement('likes_count');
+            }
         }
 
         return [
-            'id' => $article->id,
-            'likes_count' => $article->likes_count,
+            'id' => $id,
+            'likes_count' => Article::query()->whereKey($id)->qualifyColumn('likes_count'),
             'status' => false,
         ];
     }
