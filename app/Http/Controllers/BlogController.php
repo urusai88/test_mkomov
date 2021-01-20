@@ -27,10 +27,10 @@ class BlogController extends Controller
             'body' => 'required|string|min:1',
         ]);
 
-        /** @var ArticleLike $comment */
-        $comment = Comment::unguarded(function () use ($data) {
-            return new Comment($data);
-        });
+        $comment = new Comment();
+        $comment->article_id = $data['article_id'];
+        $comment->subject = $data['subject'];
+        $comment->body = $data['body'];
         $comment->saveOrFail();
 
         return $comment;
