@@ -1,15 +1,22 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Comment;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Comment::class, function (Faker $faker) {
-    return [
-        'subject' => rtrim($faker->sentence($faker->numberBetween(1, 4)), '.'),
-        'body' => $faker->text($faker->numberBetween(10, 500)),
-        'created_at' => $timestamp = $faker->dateTime,
-        'updated_at' => $timestamp,
-    ];
-});
+class CommentFactory extends Factory
+{
+    protected $model = Comment::class;
+
+    public function definition()
+    {
+        return [
+            'subject' => rtrim($this->faker->sentence($this->faker->numberBetween(1, 4)), '.'),
+            'body' => $this->faker->text($this->faker->numberBetween(10, 500)),
+            'created_at' => $timestamp = $this->faker->dateTime,
+            'updated_at' => $timestamp,
+        ];
+    }
+}
+

@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Article;
 use App\ArticleTag;
 use Illuminate\Database\Seeder;
@@ -15,7 +17,7 @@ class ArticleTagSeed extends Seeder
     {
         $faker = \Faker\Factory::create();
         /** @var ArticleTag[]|\Illuminate\Database\Eloquent\Collection $articleTags */
-        $articleTags = factory(ArticleTag::class, 10)->create();
+        $articleTags = ArticleTag::factory()->count(10)->create();
 
         Article::query()->each(function (Article $item) use ($articleTags, $faker) {
             /** @var int[] $randomTagIdList */

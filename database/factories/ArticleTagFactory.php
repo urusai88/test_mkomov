@@ -1,16 +1,22 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use App\ArticleTag;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-$factory->define(ArticleTag::class, function (Faker $faker) {
-    $label = $faker->sentence($faker->numberBetween(1, 3));
+class ArticleTagFactory extends Factory
+{
+    protected $model = ArticleTag::class;
 
-    return [
-        'label' => $label,
-        'url' => Str::slug($label),
-    ];
-});
+    public function definition()
+    {
+        $label = $this->faker->sentence($this->faker->numberBetween(1, 3));
+
+        return [
+            'label' => $label,
+            'url' => Str::slug($label),
+        ];
+    }
+}

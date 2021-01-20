@@ -1,17 +1,24 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use App\Article;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-$factory->define(Article::class, function (Faker $faker) {
-    return [
-        'title' => $title = $faker->sentence($faker->numberBetween(1, 5)),
-        'slug' => Str::slug($title),
-        'body' => $faker->text,
-        'created_at' => $dateTime = $faker->dateTime(),
-        'updated_at' => $dateTime,
-    ];
-});
+class ArticleFactory extends Factory
+{
+    protected $model = Article::class;
+
+    public function definition()
+    {
+        return [
+            'title' => $title = $this->faker->sentence($this->faker->numberBetween(1, 5)),
+            'slug' => Str::slug($title),
+            'body' => $this->faker->text,
+            'created_at' => $dateTime = $this->faker->dateTime(),
+            'updated_at' => $dateTime,
+        ];
+    }
+}
+

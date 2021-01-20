@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Article;
 use Illuminate\Database\Seeder;
 
 class ArticleSeed extends Seeder
@@ -11,6 +14,6 @@ class ArticleSeed extends Seeder
      */
     public function run()
     {
-        factory(\App\Article::class, 20)->create();
+        Article::factory()->count(2)->create();
     }
 }

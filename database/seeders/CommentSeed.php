@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Database\Seeder;
+namespace Database\Seeders;
 
 use App\Article;
 use App\Comment;
+use Illuminate\Database\Seeder;
 
 class CommentSeed extends Seeder
 {
@@ -17,7 +18,7 @@ class CommentSeed extends Seeder
         $faker = \Faker\Factory::create();
         $articles = Article::query()->get();
         $articles->each(function (Article $article) use ($faker) {
-            $comments = factory(Comment::class, $faker->numberBetween(0, 50))->make();
+            $comments = Comment::factory()->count($faker->numberBetween(0, 50))->make();
 
             $article->comments()->createMany($comments->toArray());
         });
