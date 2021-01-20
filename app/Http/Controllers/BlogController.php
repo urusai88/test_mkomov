@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use App\Comment;
 use App\Article;
 use App\ArticleLike;
 
