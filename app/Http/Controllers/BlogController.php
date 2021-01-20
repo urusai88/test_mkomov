@@ -28,11 +28,10 @@ class BlogController extends Controller
 
     public function commentCreate(Request $request)
     {
-        $data = $request->validate([
-            ...$this->articleIdValidator(),
-            'subject' => 'required|string|min:1',
-            'body' => 'required|string|min:1',
-        ]);
+        $data = $request->validate($this->articleIdValidator() + [
+                'subject' => 'required|string|min:1',
+                'body' => 'required|string|min:1',
+            ]);
 
         $comment = new Comment();
         $comment->article_id = $data['article_id'];
@@ -81,9 +80,7 @@ class BlogController extends Controller
 
     public function articleView(Request $request)
     {
-        $data = $request->validate([
-            ... $this->articleIdValidator(),
-        ]);
+        $data = $request->validate($this->articleIdValidator());
         $id = $data['article_id'];
 
         Article::query()->whereKey($id)->increment('views_count');
@@ -105,9 +102,7 @@ class BlogController extends Controller
 
     public function articleLike(Request $request)
     {
-        $data = $request->validate([
-            ... $this->articleIdValidator(),
-        ]);
+        $data = $request->validate($this->articleIdValidator());
         $id = $data['article_id'];
         $ip = $request->ip();
 
@@ -131,9 +126,7 @@ class BlogController extends Controller
 
     public function articleUnlike(Request $request)
     {
-        $data = $request->validate([
-            ... $this->articleIdValidator(),
-        ]);
+        $data = $request->validate($this->articleIdValidator());
         $id = $data['article_id'];
         $ip = $request->ip();
 
