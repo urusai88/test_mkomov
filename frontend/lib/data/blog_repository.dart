@@ -7,7 +7,9 @@ import 'package:frontend/data/responses.dart';
 import 'package:http/http.dart' as http;
 
 class BlogRepository {
-  final String baseUrl = 'http://127.0.0.1:8000/api';
+  final String baseUrl;
+
+  BlogRepository({required this.baseUrl});
 
   Future<List<ArticleEntity>> getArticlesLast() async {
     final resp = await http.get('$baseUrl/blog/articles_last');
