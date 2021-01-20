@@ -2,7 +2,7 @@ version: '3'
 
 services:
   php:
-    image: php:7.2.5-cli-alpine
+    image: php:7.3.26-cli-alpine
     container_name: php
     depends_on:
       - db
