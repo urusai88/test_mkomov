@@ -107,12 +107,12 @@ class BlogController extends Controller
         $id = $data['article_id'];
         $ip = $request->ip();
 
-        $exists = $this->likeExists($id, $request->ip());
+        $exists = $this->likeExists($id, $ip);
 
         if (!$exists) {
             $articleLike = new ArticleLike();
             $articleLike->article_id = $id;
-            $articleLike->ip_address = $request->ip();
+            $articleLike->ip_address = $ip;
             $articleLike->save();
 
             Article::query()->whereKey($id)->increment('likes_count');
@@ -131,7 +131,7 @@ class BlogController extends Controller
         $id = $data['article_id'];
         $ip = $request->ip();
 
-        $exists = $this->likeExists($id, $request->ip());
+        $exists = $this->likeExists($id, $ip);
 
         if ($exists) {
             $deleted = ArticleLike::query()
