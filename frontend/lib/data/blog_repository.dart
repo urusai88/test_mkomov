@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:frontend/data/entities.dart';
-import 'package:frontend/data/responses.dart';
+import 'entities.dart';
+import 'responses.dart';
 
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
@@ -27,7 +27,7 @@ class BlogRepository {
   }
 
   Future<ArticleEntity> getArticle({required int id}) async {
-    final resp = await http.get('$baseUrl/blog/article/$id');
+    final resp = await http.get('$baseUrl/blog/articles/$id');
 
     return ArticleEntity.fromJson(
         jsonDecode(resp.body) as Map<String, dynamic>);
@@ -78,7 +78,7 @@ class BlogRepository {
     int page = 1,
   }) async {
     final resp =
-        await http.get('$baseUrl/blog/comment/list/$articleId?page=$page');
+        await http.get('$baseUrl/blog/comments/list/$articleId?page=$page');
 
     return CommentListResponse.fromJson(
         jsonDecode(resp.body) as Map<String, dynamic>);
@@ -90,10 +90,9 @@ class BlogRepository {
     required String body,
   }) async {
     final resp = await http.post(
-      '$baseUrl/blog/comment/create',
+      '$baseUrl/blog/comments/create',
       body: jsonEncode(
-        {'article_id': articleId, 'subject': subject, 'body': body},
-      ),
+          {'article_id': articleId, 'subject': subject, 'body': body}),
       headers: {
         'accept': 'application/json',
         'content-type': 'application/json',

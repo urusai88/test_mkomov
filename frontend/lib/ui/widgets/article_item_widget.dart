@@ -1,15 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/data/entities.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import './../../import.dart';
+
 class ArticleItemWidget extends StatefulWidget {
   final ArticleEntity item;
+  final bool navigate;
 
-  ArticleItemWidget({required this.item});
+  ArticleItemWidget({required this.item, this.navigate = true});
 
   @override
   _ArticleItemWidgetState createState() => _ArticleItemWidgetState();
@@ -19,10 +19,10 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
   static final dateTimeFormat = DateFormat(DateFormat.YEAR_MONTH_DAY);
 
   Future<void> navigateToArticle() async {
-    await Navigator.pushNamed(
-      context,
-      '/articles/${widget.item.slug}.${widget.item.id}',
-    );
+    if (!widget.navigate) return;
+
+    await Router.of(context).routerDelegate.setNewRoutePath(ArticlesRoutePath(
+        articleId: widget.item.id, articleSlug: widget.item.slug));
   }
 
   Future<void> likeToggle() async {

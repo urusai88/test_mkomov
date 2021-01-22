@@ -3,13 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/data/entities.dart';
-import 'package:frontend/ui/constants.dart';
-import 'package:frontend/ui/widgets/article_item_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'article_model.dart';
+
+import './../../import.dart';
 
 class ArticleScreen extends StatefulWidget {
   final int id;
@@ -190,7 +188,9 @@ class _ArticleScreenState extends State<ArticleScreen> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => Router.of(context)
+                      .routerDelegate
+                      .setNewRoutePath(AppRoutePath()),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: Text(
@@ -231,7 +231,10 @@ class _ArticleScreenState extends State<ArticleScreen> {
                     controller: scrollController,
                     slivers: [
                       SliverToBoxAdapter(
-                        child: ArticleItemWidget(item: article),
+                        child: ArticleItemWidget(
+                          item: article,
+                          navigate: false,
+                        ),
                       ),
                       SliverToBoxAdapter(
                         child: Center(

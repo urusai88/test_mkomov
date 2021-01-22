@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/data/entities.dart';
-import 'package:frontend/ui/constants.dart';
-import 'package:frontend/ui/screens/article_catalog_screen.dart';
-import 'package:frontend/ui/widgets/article_item_widget.dart';
 import 'package:provider/provider.dart';
+
+import './../../import.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -64,7 +61,11 @@ class _MainScreenState extends State<MainScreen>
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/articles'),
+                  onTap: () {
+                    Router.of(context)
+                        .routerDelegate
+                        .setNewRoutePath(ArticlesRoutePath());
+                  },
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: Text(

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/data/entities.dart';
+import 'package:flutter/foundation.dart';
+
+import './../../import.dart';
 
 class ArticleCatalogModel {
   final BlogRepository blogRepository;

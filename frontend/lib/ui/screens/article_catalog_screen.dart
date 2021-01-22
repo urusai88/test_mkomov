@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/data/entities.dart';
-import 'package:frontend/ui/constants.dart';
-import 'package:frontend/ui/screens/article_catalog_model.dart';
-import 'package:frontend/ui/widgets/article_item_widget.dart';
 import 'package:provider/provider.dart';
+
+import 'article_catalog_model.dart';
+import './../../import.dart';
 
 class ArticleCatalogScreen extends StatefulWidget {
   @override
@@ -59,12 +57,15 @@ class _ArticleCatalogScreeState extends State<ArticleCatalogScreen> {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/'),
+                  onTap: () => Router.of(context)
+                      .routerDelegate
+                      .setNewRoutePath(AppRoutePath()),
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: Text(
                       'Главная страница',
-                      style: navigationTextStyleInactive,textAlign: TextAlign.center,
+                      style: navigationTextStyleInactive,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -72,7 +73,8 @@ class _ArticleCatalogScreeState extends State<ArticleCatalogScreen> {
               Expanded(
                 child: Text(
                   'Каталог статей',
-                  style: navigationTextStyleActive,textAlign: TextAlign.center,
+                  style: navigationTextStyleActive,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ],

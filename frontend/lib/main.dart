@@ -1,10 +1,10 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/data/blog_repository.dart';
-import 'package:frontend/ui/main_screen.dart';
-import 'package:frontend/ui/screens/article_catalog_screen.dart';
-import 'package:frontend/ui/screens/article_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+import 'routing.dart';
+import 'import.dart';
 
 void main() {
   setPathUrlStrategy();
@@ -13,8 +13,26 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  late AppRouteParser routeParser;
+  late AppRouterDelegate routerDelegate;
+
+  MyApp() {
+    routeParser = AppRouteParser();
+    routerDelegate = AppRouterDelegate();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget app = MaterialApp.router(
+      title: 'Simple blog',
+      routeInformationProvider: PlatformRouteInformationProvider(
+        initialRouteInformation: RouteInformation(location: '/'),
+      ),
+      routeInformationParser: routeParser,
+      routerDelegate: routerDelegate,
+    );
+
+    /*
     Widget app = MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -46,7 +64,7 @@ class MyApp extends StatelessWidget {
           settings: settings,
         );
       },
-    );
+    );*/
 
     app = MultiProvider(
       providers: [
