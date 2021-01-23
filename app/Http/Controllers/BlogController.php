@@ -85,12 +85,11 @@ class BlogController extends Controller
         $data = $request->validate($this->articleIdValidator());
         $id = $data['article_id'];
 
-        Article::query()->whereKey($id)->increment('views_count');
-        /** @var Article $article */
-        $article = Article::query()->find($id);
+        $query = Article::query()->whereKey($id);
+        $query->increment('views_count');
 
         return [
-            'views_count' => $article->views_count,
+            'views_count' => $query->pluck('views_count'),
         ];
     }
 
