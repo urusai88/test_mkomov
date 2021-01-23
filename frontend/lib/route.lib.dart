@@ -27,8 +27,7 @@ class RoutePattern {
     final match = RegExp(pattern).firstMatch(path);
 
     if (match != null) {
-      print('pattern: $pattern path: $path match: $match');
-
+      // print('pattern: $pattern path: $path match: $match');
       return RouteMatchResult(
         values: match.groups(List.generate(match.groupCount, (i) => i + 1)),
       );
@@ -95,10 +94,6 @@ T routeTransformer<T>(
       break;
     }
   }
-
-  print('location: $location result: $result');
-
+  // print('location: $location result: $result');
   return result;
-
-  return onUnknown;
 }

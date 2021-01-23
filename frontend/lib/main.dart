@@ -24,9 +24,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget app = MaterialApp.router(
       title: 'Simple blog',
-      routeInformationProvider: PlatformRouteInformationProvider(
-        initialRouteInformation: RouteInformation(location: '/'),
-      ),
       routeInformationParser: routeParser,
       routerDelegate: routerDelegate,
     );

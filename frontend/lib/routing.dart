@@ -20,6 +20,8 @@ class AppPage extends Page {
 
 class AppRoutePath {}
 
+class LoadingRoutePath extends AppRoutePath {}
+
 class ArticlesRoutePath extends AppRoutePath {
   int? articleId;
   String? articleSlug;
@@ -36,20 +38,23 @@ class ArticlesRoutePath extends AppRoutePath {
 }
 
 class AppRouteParser extends RouteInformationParser<AppRoutePath> {
+  final routes = <String, Function>{
+    '/articles/{slug}.{id}': (slug, id) =>
+        ArticlesRoutePath(articleId: int.parse(id), articleSlug: slug),
+    '/articles': () => ArticlesRoutePath(),
+    '/': () => AppRoutePath(),
+  };
+
   @override
   Future<AppRoutePath> parseRouteInformation(
-      RouteInformation routeInformation) async {
+    RouteInformation routeInformation,
+  ) async {
     print('parse ${routeInformation.location}');
-
-    final routes = <String, Function>{
-      '/articles/{slug}.{id}': (slug, id) =>
-          ArticlesRoutePath(articleId: int.parse(id), articleSlug: slug),
-      '/articles': () => ArticlesRoutePath(),
-      '/': () => AppRoutePath(),
-    };
-
     return routeTransformer<AppRoutePath>(
-        routeInformation.location ?? '', routes, AppRoutePath());
+      routeInformation.location ?? '',
+      routes,
+      AppRoutePath(),
+    );
   }
 
   @override
@@ -73,7 +78,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
   @override
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  AppRoutePath routePath = AppRoutePath();
+  AppRoutePath routePath = LoadingRoutePath();
 
   @override
   Future<void> setNewRoutePath(AppRoutePath configuration) async {
@@ -87,6 +92,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
 
   @override
   Widget build(BuildContext context) {
+    if (routePath is LoadingRoutePath) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Navigator(
       key: navigatorKey,
       pages: [
