@@ -3,7 +3,7 @@ version: '3'
 
 services:
   laravel.test:
-    container_name: cli
+    container_name: mkomov_cli
     build:
       context: ./docker/8.0
       dockerfile: Dockerfile
@@ -48,6 +48,7 @@ services:
     #      test: [ "CMD", "mysqladmin", "ping" ]
   pgsql:
     image: postgres:13
+    container_name: mkomov_db
     ports:
       - '${FORWARD_DB_PORT:-5432}:5432'
     environment:
@@ -61,6 +62,7 @@ services:
       - sail
   redis:
     image: 'redis:alpine'
+    container_name: mkomov_redis
     ports:
       - '${FORWARD_REDIS_PORT:-6379}:6379'
     volumes:
@@ -77,6 +79,7 @@ services:
   #         - sail
   mailhog:
     image: 'mailhog/mailhog:latest'
+    container_name: mkomov_mailhog
     ports:
       - '${FORWARD_MAILHOG_PORT:-1025}:1025'
       - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
