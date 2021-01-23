@@ -89,7 +89,7 @@ class BlogController extends Controller
         $query->increment('views_count');
 
         return [
-            'views_count' => $query->pluck('views_count'),
+            'views_count' => $query->pluck('views_count')->first(),
         ];
     }
 
