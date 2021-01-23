@@ -12,13 +12,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  late AppRouteParser routeParser;
-  late AppRouterDelegate routerDelegate;
+  final AppRouteParser routeParser;
+  final AppRouterDelegate routerDelegate;
 
-  MyApp() {
-    routeParser = AppRouteParser();
-    routerDelegate = AppRouterDelegate();
-  }
+  MyApp()
+      : routeParser = AppRouteParser(),
+        routerDelegate = AppRouterDelegate();
 
   @override
   Widget build(BuildContext context) {
