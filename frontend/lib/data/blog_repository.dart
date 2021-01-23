@@ -19,18 +19,23 @@ class BlogRepository {
         .toList();
   }
 
-  Future<ArticlesListResponse> getArticles({int page = 1}) async {
+  Future<LaravelPaginationResponse<ArticleEntity>> getArticles({
+    int page = 1,
+  }) async {
     final resp = await http.get('$baseUrl/blog/articles?page=$page');
 
-    return ArticlesListResponse.fromJson(
-        jsonDecode(resp.body) as Map<String, dynamic>);
+    return LaravelPaginationResponse.fromJson(
+      jsonDecode(resp.body) as Map<String, dynamic>,
+      (o) => ArticleEntity.fromJson(o as Map<String, dynamic>),
+    );
   }
 
   Future<ArticleEntity> getArticle({required int id}) async {
     final resp = await http.get('$baseUrl/blog/articles/$id');
 
     return ArticleEntity.fromJson(
-        jsonDecode(resp.body) as Map<String, dynamic>);
+      jsonDecode(resp.body) as Map<String, dynamic>,
+    );
   }
 
   Future<ArticlesLikeResponse> articleLike({required int articleId}) async {
@@ -70,18 +75,21 @@ class BlogRepository {
     );
 
     return ArticlesViewResponse.fromJson(
-        jsonDecode(resp.body) as Map<String, dynamic>);
+      jsonDecode(resp.body) as Map<String, dynamic>,
+    );
   }
 
-  Future<CommentListResponse> commentList({
+  Future<LaravelPaginationResponse<CommentEntity>> commentList({
     required int articleId,
     int page = 1,
   }) async {
     final resp =
         await http.get('$baseUrl/blog/comments/list/$articleId?page=$page');
 
-    return CommentListResponse.fromJson(
-        jsonDecode(resp.body) as Map<String, dynamic>);
+    return LaravelPaginationResponse.fromJson(
+      jsonDecode(resp.body) as Map<String, dynamic>,
+      (o) => CommentEntity.fromJson(o as Map<String, dynamic>),
+    );
   }
 
   Future<void> sendComment({

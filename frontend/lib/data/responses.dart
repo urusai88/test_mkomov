@@ -4,44 +4,6 @@ import 'entities.dart';
 
 part 'responses.g.dart';
 
-@JsonSerializable(explicitToJson: true)
-class ArticlesListResponse {
-  List<ArticleEntity> data;
-  @JsonKey(name: 'current_page')
-  int currentPage;
-  @JsonKey(name: 'last_page')
-  int lastPage;
-  @JsonKey(name: 'first_page_url')
-  String firstPageUrl;
-  @JsonKey(name: 'next_page_url')
-  String? nextPageUrl;
-  @JsonKey(name: 'prev_page_url')
-  String? prevPageUrl;
-  int from;
-  int to;
-  int total;
-  @JsonKey(name: 'per_page')
-  int perPage;
-
-  ArticlesListResponse({
-    required this.currentPage,
-    required this.lastPage,
-    required this.data,
-    required this.firstPageUrl,
-    required this.nextPageUrl,
-    required this.prevPageUrl,
-    required this.from,
-    required this.to,
-    required this.total,
-    required this.perPage,
-  });
-
-  factory ArticlesListResponse.fromJson(Map<String, dynamic> json) =>
-      _$ArticlesListResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ArticlesListResponseToJson(this);
-}
-
 @JsonSerializable()
 class ArticlesLikeResponse {
   final int id;
@@ -74,29 +36,23 @@ class ArticlesViewResponse {
   Map<String, dynamic> toJson() => _$ArticlesViewResponseToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class CommentListResponse {
-  List<CommentEntity> data;
-  @JsonKey(name: 'current_page')
-  int currentPage;
-  @JsonKey(name: 'last_page')
-  int lastPage;
-  @JsonKey(name: 'first_page_url')
-  String firstPageUrl;
-  @JsonKey(name: 'next_page_url')
-  String? nextPageUrl;
-  @JsonKey(name: 'prev_page_url')
-  String? prevPageUrl;
-  int from;
-  int to;
-  int total;
-  @JsonKey(name: 'per_page')
-  int perPage;
+@JsonSerializable(genericArgumentFactories: true)
+class LaravelPaginationResponse<T> {
+  final List<T> data;
+  final int currentPage;
+  final int lastPage;
+  final String? firstPageUrl;
+  final String? nextPageUrl;
+  final String? prevPageUrl;
+  final int from;
+  final int to;
+  final int total;
+  final int perPage;
 
-  CommentListResponse({
+  LaravelPaginationResponse({
+    required this.data,
     required this.currentPage,
     required this.lastPage,
-    required this.data,
     required this.firstPageUrl,
     required this.nextPageUrl,
     required this.prevPageUrl,
@@ -106,8 +62,10 @@ class CommentListResponse {
     required this.perPage,
   });
 
-  factory CommentListResponse.fromJson(Map<String, dynamic> json) =>
-      _$CommentListResponseFromJson(json);
+  factory LaravelPaginationResponse.fromJson(
+          Map<String, dynamic> json, T Function(Object?) fromJsonT) =>
+      _$LaravelPaginationResponseFromJson(json, fromJsonT);
 
-  Map<String, dynamic> toJson() => _$CommentListResponseToJson(this);
+  Map<String, dynamic> toJson(Object Function(T) toJsonT) =>
+      _$LaravelPaginationResponseToJson(this, toJsonT);
 }

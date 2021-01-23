@@ -6,38 +6,6 @@ part of 'responses.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ArticlesListResponse _$ArticlesListResponseFromJson(Map<String, dynamic> json) {
-  return ArticlesListResponse(
-    currentPage: json['current_page'] as int,
-    lastPage: json['last_page'] as int,
-    data: (json['data'] as List<dynamic>)
-        .map((e) => ArticleEntity.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    firstPageUrl: json['first_page_url'] as String,
-    nextPageUrl: json['next_page_url'] as String?,
-    prevPageUrl: json['prev_page_url'] as String?,
-    from: json['from'] as int,
-    to: json['to'] as int,
-    total: json['total'] as int,
-    perPage: json['per_page'] as int,
-  );
-}
-
-Map<String, dynamic> _$ArticlesListResponseToJson(
-        ArticlesListResponse instance) =>
-    <String, dynamic>{
-      'data': instance.data.map((e) => e.toJson()).toList(),
-      'current_page': instance.currentPage,
-      'last_page': instance.lastPage,
-      'first_page_url': instance.firstPageUrl,
-      'next_page_url': instance.nextPageUrl,
-      'prev_page_url': instance.prevPageUrl,
-      'from': instance.from,
-      'to': instance.to,
-      'total': instance.total,
-      'per_page': instance.perPage,
-    };
-
 ArticlesLikeResponse _$ArticlesLikeResponseFromJson(Map<String, dynamic> json) {
   return ArticlesLikeResponse(
     id: json['id'] as int,
@@ -66,34 +34,37 @@ Map<String, dynamic> _$ArticlesViewResponseToJson(
       'views_count': instance.viewsCount,
     };
 
-CommentListResponse _$CommentListResponseFromJson(Map<String, dynamic> json) {
-  return CommentListResponse(
-    currentPage: json['current_page'] as int,
-    lastPage: json['last_page'] as int,
-    data: (json['data'] as List<dynamic>)
-        .map((e) => CommentEntity.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    firstPageUrl: json['first_page_url'] as String,
-    nextPageUrl: json['next_page_url'] as String?,
-    prevPageUrl: json['prev_page_url'] as String?,
+LaravelPaginationResponse<T> _$LaravelPaginationResponseFromJson<T>(
+  Map<String, dynamic> json,
+  T Function(Object? json) fromJsonT,
+) {
+  return LaravelPaginationResponse<T>(
+    data: (json['data'] as List<dynamic>).map(fromJsonT).toList(),
+    currentPage: json['currentPage'] as int,
+    lastPage: json['lastPage'] as int,
+    firstPageUrl: json['firstPageUrl'] as String?,
+    nextPageUrl: json['nextPageUrl'] as String?,
+    prevPageUrl: json['prevPageUrl'] as String?,
     from: json['from'] as int,
     to: json['to'] as int,
     total: json['total'] as int,
-    perPage: json['per_page'] as int,
+    perPage: json['perPage'] as int,
   );
 }
 
-Map<String, dynamic> _$CommentListResponseToJson(
-        CommentListResponse instance) =>
+Map<String, dynamic> _$LaravelPaginationResponseToJson<T>(
+  LaravelPaginationResponse<T> instance,
+  Object Function(T value) toJsonT,
+) =>
     <String, dynamic>{
-      'data': instance.data.map((e) => e.toJson()).toList(),
-      'current_page': instance.currentPage,
-      'last_page': instance.lastPage,
-      'first_page_url': instance.firstPageUrl,
-      'next_page_url': instance.nextPageUrl,
-      'prev_page_url': instance.prevPageUrl,
+      'data': instance.data.map(toJsonT).toList(),
+      'currentPage': instance.currentPage,
+      'lastPage': instance.lastPage,
+      'firstPageUrl': instance.firstPageUrl,
+      'nextPageUrl': instance.nextPageUrl,
+      'prevPageUrl': instance.prevPageUrl,
       'from': instance.from,
       'to': instance.to,
       'total': instance.total,
-      'per_page': instance.perPage,
+      'perPage': instance.perPage,
     };
