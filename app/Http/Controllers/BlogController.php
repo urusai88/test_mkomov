@@ -28,7 +28,8 @@ class BlogController extends Controller
 
     public function commentCreate(Request $request)
     {
-        $data = $request->validate($this->articleIdValidator() + [
+        $data = $request->validate(
+            $this->articleIdValidator() + [
                 'subject' => 'required|string|min:1',
                 'body' => 'required|string|min:1',
             ]);
