@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\ArticleLike;
 use App\Comment;
+use App\Http\Requests\BlogCommentCreateRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -26,18 +27,14 @@ class BlogController extends Controller
         ];
     }
 
-    public function commentCreate(Request $request)
+    public function commentCreate(BlogCommentCreateRequest $request)
     {
-        $data = $request->validate(
-            $this->articleIdValidator() + [
-                'subject' => 'required|string|min:1',
-                'body' => 'required|string|min:1',
-            ]);
+        $request->validated();
 
         $comment = new Comment();
-        $comment->article_id = $data['article_id'];
-        $comment->subject = $data['subject'];
-        $comment->body = $data['body'];
+        $comment->article_id = $request->article_id;
+        $comment->subject = $request->subject;
+        $comment->body = $request->body;
         $comment->saveOrFail();
 
         return $comment;
