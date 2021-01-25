@@ -16,7 +16,7 @@ class BlogController extends Controller
         return [
             'like as like' => function (Builder $query) use ($ipAddress) {
                 $query->where('ip_address', $ipAddress);
-            }
+            },
         ];
     }
 
