@@ -112,9 +112,10 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath>
 
   List<Page> articlesPages(ArticlesRoutePath path) {
     return [
-      AppPage(page: ArticleCatalogScreen()),
       if (path.articleId != null)
-        AppPage(page: ArticleScreen(id: path.articleId!)),
+        AppPage(page: ArticleScreen(id: path.articleId!))
+      else
+        AppPage(page: ArticleCatalogScreen()),
     ];
   }
 }

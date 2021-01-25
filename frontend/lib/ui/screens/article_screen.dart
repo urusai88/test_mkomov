@@ -85,40 +85,35 @@ class _ArticleScreenState extends State<ArticleScreen> {
   }
 
   Widget commentList() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: model.commentsLoading,
-      builder: (_, commentsLoading, __) {
-        if (commentsLoading) {
+    return StreamBuilder<List<CommentEntity>>(
+      stream: model.comments,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
           return SliverFillRemaining(
             child: Center(child: CircularProgressIndicator()),
           );
         }
 
-        return ValueListenableBuilder<List<CommentEntity>>(
-          valueListenable: model.comments,
-          builder: (_, comments, __) {
-            return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, index) {
-                  if (index.isEven) {
-                    final item = comments[index ~/ 2];
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (_, index) {
+              if (index.isEven) {
+                final item = snapshot.data![index ~/ 2];
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(item.subject, textAlign: TextAlign.start),
-                        Text(item.body, textAlign: TextAlign.start),
-                      ],
-                    );
-                  }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(item.subject, textAlign: TextAlign.start),
+                    Text(item.body, textAlign: TextAlign.start),
+                  ],
+                );
+              }
 
-                  return Divider(color: Colors.blueGrey);
-                },
-                childCount: max(0, comments.length * 2 - 1),
-              ),
-            );
-          },
+              return Divider(color: Colors.blueGrey);
+            },
+            childCount: max(0, snapshot.data!.length * 2 - 1),
+          ),
         );
       },
     );
@@ -214,54 +209,54 @@ class _ArticleScreenState extends State<ArticleScreen> {
       ),
     );
 
-    final body = Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: bodyWidth),
-        child: ValueListenableBuilder<ArticleEntity?>(
-          valueListenable: model.article,
-          builder: (_, article, __) {
-            if (article == null) {
-              return Center(child: CircularProgressIndicator());
-            }
+    final body = StreamBuilder<ArticleEntity>(
+      stream: model.article,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: CustomScrollView(
-                    controller: scrollController,
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: ArticleItemWidget(
-                          item: article,
-                          navigate: false,
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(
-                            'Комментарии',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      commentList(),
-                    ],
+        return Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: ArticleItemWidget(
+                      item: snapshot.data!,
+                      navigate: false,
+                    ),
                   ),
-                ),
-                commentForm(),
-              ],
-            );
-          },
-        ),
-      ),
+                  SliverToBoxAdapter(
+                    child: Center(
+                      child: Text(
+                        'Комментарии',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  commentList(),
+                ],
+              ),
+            ),
+            commentForm(),
+          ],
+        );
+      },
     );
 
     return Scaffold(
       appBar: appBar,
-      body: body,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: bodyWidth),
+          child: body,
+        ),
+      ),
     );
   }
 }

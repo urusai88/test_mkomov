@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 import './../../import.dart';
 
@@ -6,9 +8,9 @@ class ArticleModel {
   final int id;
   final BlogRepository blogRepository;
 
-  final article = ValueNotifier<ArticleEntity?>(null);
-  final comments = ValueNotifier<List<CommentEntity>>([]);
-  final commentsCount = ValueNotifier<int>(0);
+  final article = BehaviorSubject<ArticleEntity>();
+  final comments = BehaviorSubject<List<CommentEntity>>();
+  final commentsCount = BehaviorSubject<int>();
 
   final errorBag = ValueNotifier<LaravelErrorBag?>(null);
   final sending = ValueNotifier<bool>(false);
@@ -25,23 +27,26 @@ class ArticleModel {
     required this.blogRepository,
   });
 
+  void dispose() {
+    article.close();
+    comments.close();
+    commentsCount.close();
+  }
+
   Future<void> load() async {
-    final resp = await blogRepository.getArticle(id: id);
+    final resp1 = await blogRepository.getArticle(id: id);
+    final resp2 = await blogRepository.commentList(articleId: id, page: _page);
 
-    article.value = resp;
-
-    final commentListResponse =
-        await blogRepository.commentList(articleId: id, page: _page);
-
-    comments.value = commentListResponse.data;
-    commentsCount.value = commentListResponse.total;
+    article.add(resp1);
+    comments.add(resp2.data);
+    commentsCount.add(resp2.total);
 
     commentsLoading.value = false;
   }
 
   Future<void> loadNext() async {
     if (_commentsLoading) return;
-    if (comments.value.length >= commentsCount.value) return;
+    if (comments.requireValue.length >= commentsCount.requireValue) return;
     _commentsLoading = true;
 
     final commentListResponse = await blogRepository.commentList(
@@ -49,15 +54,16 @@ class ArticleModel {
       page: ++_page,
     );
 
-    comments.value = List.of(comments.value)..addAll(commentListResponse.data);
-    commentsCount.value = commentListResponse.total;
+    comments.add(comments.requireValue..addAll(commentListResponse.data));
+    commentsCount.add(commentListResponse.total);
+
     _commentsLoading = false;
   }
 
   Future<void> view() async {
     final resp = await blogRepository.viewArticle(articleId: id);
 
-    article.value = article.value!.copyWithViewsCount(resp.viewsCount);
+    article.add(article.value!.copyWithViewsCount(resp.viewsCount));
   }
 
   Future<void> sendComment({
