@@ -3,6 +3,55 @@
 part of 'entities.dart';
 
 // **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+extension ArticleEntityCopyWithExtension on ArticleEntity {
+  ArticleEntity copyWith({
+    int? id,
+    String? title,
+    String? body,
+    String? slug,
+    int? likesCount,
+    int? viewsCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? like,
+    List<ArticleTagEntity>? articleTags,
+  }) {
+    return ArticleEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      slug: slug ?? this.slug,
+      likesCount: likesCount ?? this.likesCount,
+      viewsCount: viewsCount ?? this.viewsCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      like: like ?? this.like,
+      articleTags: articleTags ?? this.articleTags,
+    );
+  }
+
+  ArticleEntity copyWithNull({
+    bool articleTags = false,
+  }) {
+    return ArticleEntity(
+      id: this.id,
+      title: this.title,
+      body: this.body,
+      slug: this.slug,
+      likesCount: this.likesCount,
+      viewsCount: this.viewsCount,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      like: this.like,
+      articleTags: articleTags ? null : this.articleTags,
+    );
+  }
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

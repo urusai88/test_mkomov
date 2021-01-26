@@ -155,6 +155,24 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  copy_with:
+    dependency: "direct main"
+    description:
+      path: copy_with
+      ref: HEAD
+      resolved-ref: "4d1aee2d4fccb19fee6fd61c33667d90a6bb7b6d"
+      url: "https://github.com/urusai88/copy_with.git"
+    source: git
+    version: "0.0.1"
+  copy_with_generator:
+    dependency: "direct dev"
+    description:
+      path: copy_with_generator
+      ref: HEAD
+      resolved-ref: "4d1aee2d4fccb19fee6fd61c33667d90a6bb7b6d"
+      url: "https://github.com/urusai88/copy_with.git"
+    source: git
+    version: "0.0.1"
   coverage:
     dependency: transitive
     description:

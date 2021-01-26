@@ -63,7 +63,7 @@ class ArticleModel {
   Future<void> view() async {
     final resp = await blogRepository.viewArticle(articleId: id);
 
-    article.add(article.value!.copyWithViewsCount(resp.viewsCount));
+    article.add(article.value!.copyWith(viewsCount: resp.viewsCount));
   }
 
   Future<void> sendComment({

@@ -1,3 +1,4 @@
+import 'package:copy_with/copy_with.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'entities.g.dart';
@@ -30,24 +31,25 @@ class LikeEntity {
   Map<String, dynamic> toJson() => _$LikeEntityToJson(this);
 }
 
+@CopyWith()
 @JsonSerializable(explicitToJson: true)
 class ArticleEntity {
-  int id;
-  String title;
-  String body;
-  String slug;
+  final int id;
+  final String title;
+  final String body;
+  final String slug;
   @JsonKey(name: 'likes_count')
-  int likesCount;
+  final int likesCount;
   @JsonKey(name: 'views_count')
-  int viewsCount;
+  final int viewsCount;
   @JsonKey(name: 'created_at')
-  DateTime createdAt;
+  final DateTime createdAt;
   @JsonKey(name: 'updated_at')
-  DateTime updatedAt;
-  int like;
+  final DateTime updatedAt;
+  final int like;
 
   @JsonKey(name: 'article_tags')
-  List<ArticleTagEntity>? articleTags;
+  final List<ArticleTagEntity>? articleTags;
 
   ArticleEntity({
     required this.id,
@@ -61,18 +63,6 @@ class ArticleEntity {
     this.articleTags,
     required this.like,
   });
-
-  ArticleEntity copyWithViewsCount(int viewsCount) => ArticleEntity(
-        id: id,
-        title: title,
-        body: body,
-        slug: slug,
-        likesCount: likesCount,
-        viewsCount: viewsCount,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        like: like,
-      );
 
   factory ArticleEntity.fromJson(Map<String, dynamic> json) =>
       _$ArticleEntityFromJson(json);

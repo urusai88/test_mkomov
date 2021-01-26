@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'routing.dart';
 import 'import.dart';
+import 'routing.dart';
 
 void main() {
   setPathUrlStrategy();
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       routeInformationParser: routeParser,
       routerDelegate: routerDelegate,
     );
-
+    TextStyle().copyWith();
     app = MultiProvider(
       providers: [
         Provider<BlogRepository>(

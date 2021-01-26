@@ -18,22 +18,33 @@ class ArticleItemWidget extends StatefulWidget {
 class _ArticleItemWidgetState extends State<ArticleItemWidget> {
   static final dateTimeFormat = DateFormat(DateFormat.YEAR_MONTH_DAY);
 
+  late ArticleEntity item;
+
+  @override
+  void initState() {
+    super.initState();
+
+    item = widget.item;
+  }
+
   Future<void> navigateToArticle() async {
     if (!widget.navigate) return;
 
-    await Router.of(context).routerDelegate.setNewRoutePath(ArticlesRoutePath(
-        articleId: widget.item.id, articleSlug: widget.item.slug));
+    await Router.of(context).routerDelegate.setNewRoutePath(
+        ArticlesRoutePath(articleId: item.id, articleSlug: item.slug));
   }
 
   Future<void> likeToggle() async {
     final blogRepository = Provider.of<BlogRepository>(context, listen: false);
-    final resp = widget.item.like == 0
-        ? await blogRepository.articleLike(articleId: widget.item.id)
-        : await blogRepository.articleUnlike(articleId: widget.item.id);
+    final resp = item.like == 0
+        ? await blogRepository.articleLike(articleId: item.id)
+        : await blogRepository.articleUnlike(articleId: item.id);
 
     setState(() {
-      widget.item.like = resp.status ? 1 : 0;
-      widget.item.likesCount = resp.likesCount;
+      item = item.copyWith(
+        like: resp.status ? 1 : 0,
+        likesCount: resp.likesCount,
+      );
     });
   }
 
@@ -70,7 +81,7 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
         Icon(Icons.remove_red_eye_rounded, color: greyColor),
         const SizedBox(width: 5),
         Text(
-          '${widget.item.viewsCount}',
+          '${item.viewsCount}',
           style: const TextStyle(color: greyColor),
         ),
       ],
@@ -84,16 +95,14 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
           child: MouseRegion(
             cursor: SystemMouseCursors.click,
             child: Icon(
-              widget.item.like == 0
-                  ? Icons.thumb_up_alt_outlined
-                  : Icons.thumb_up_alt,
+              item.like == 0 ? Icons.thumb_up_alt_outlined : Icons.thumb_up_alt,
               color: greyColor,
             ),
           ),
         ),
         const SizedBox(width: 5),
         Text(
-          '${widget.item.likesCount}',
+          '${item.likesCount}',
           style: const TextStyle(color: greyColor),
         ),
       ],
@@ -106,7 +115,7 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           margin: const EdgeInsets.symmetric(vertical: 7),
           child: Text(
-            widget.item.title,
+            item.title,
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
@@ -128,14 +137,14 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
           child: Text(
-            widget.item.body,
+            item.body,
             style: const TextStyle(fontSize: 16),
           ),
         ),
         Row(
           children: [
             Text(
-              dateTimeFormat.format(widget.item.createdAt),
+              dateTimeFormat.format(item.createdAt),
               style: const TextStyle(fontSize: 15, color: greyColor),
             ),
             Spacer(),
@@ -144,7 +153,7 @@ class _ArticleItemWidgetState extends State<ArticleItemWidget> {
             likesCount,
           ],
         ),
-        if (widget.item.articleTags != null) tags(widget.item.articleTags!),
+        if (item.articleTags != null) tags(item.articleTags!),
       ],
     );
   }
